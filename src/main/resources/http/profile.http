@@ -1,0 +1,30 @@
+### Registration API Test
+POST http://localhost:8080/auth/registration
+Content-Type: application/json
+
+{
+  "name": "Avazbek",
+  "surname": "Yuldashev",
+  "email": "telegram.vzlom@gmail.com",
+  "password": "Greed1212"
+
+}
+
+### Authorization API Test
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "telegram.vzlom@gmail.com",
+  "password": "Greed1212"
+}
+
+### Authorization API Test
+POST http://localhost:8080/profile/authorization
+Content-Type: application/json
+
+{
+  "email": "GREED@GMAIL.COM",
+  "password": "GREED1212"
+}
+

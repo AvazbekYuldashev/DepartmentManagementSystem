@@ -1,0 +1,57 @@
+### Bajarilgan ishni yaratish
+POST http://213.230.99.253:8080/completedWork
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzk5ODM1NTYsImV4cCI6MTc0MDA2OTk1Nn0.Fsnz4_f7u9p8VXxpO7vf0vm1VH1EembLCQZVUjJmK5k
+
+{
+  "applicationId": 1
+}
+
+### Barcha bajarilgan ishlarni olish
+GET http://localhost:8080/completedWork/all
+
+### ID bo‘yicha bajarilgan ishni olish
+GET http://localhost:8080/completedWork/1
+
+### Ariza ID bo‘yicha bajarilgan ishlarni olish
+GET http://localhost:8080/completedWork/1/application
+
+### Bo‘lim ID bo‘yicha bajarilgan ishlarni olish
+GET http://localhost:8080/completedWork/1/department
+
+### Hodim ID bo‘yicha bajarilgan ishlarni olish
+GET http://localhost:8080/completedWork/1/employee
+
+### Hodim ID bo‘yicha bajarilgan ishni yangilash
+PUT http://localhost:8080/completedWork/1/employee
+Content-Type: application/json
+
+{
+  "employeeId": 3
+}
+
+### Bajarilgan ishni yangilash
+PUT http://localhost:8080/completedWork/1
+Content-Type: application/json
+
+{
+  "title": "Updated Completed Work",
+  "description": "Updated description"
+}
+
+### Bajarilgan ishni vaqtincha yashirish
+PATCH http://localhost:8080/completedWork/1/wipe
+Content-Type: application/json
+
+{
+  "visible": false
+}
+
+### Bajarilgan ishni o‘chirish
+DELETE http://localhost:8080/completedWork/1
+
+### Bajarilgan ishlarni sahifalab olish
+GET http://localhost:8080/completedWork/paged?page=1&size=10
+
+### Filtr bo‘yicha bajarilgan ishlarni olish
+POST http://localhost:8080/completedWork/filter?page=1&size=10

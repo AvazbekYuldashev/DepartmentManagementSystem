@@ -1,0 +1,65 @@
+### Bo'lim yaratish
+POST http://localhost:8080/department
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1VQRVJBRE1JTiIsInN1cm5hbWUiOiJZdWxkYXNoZXYiLCJuYW1lIjoiQXZhemJlayIsImlkIjoxLCJlbWFpbCI6InRlbGVncmFtLnZ6bG9tQGdtYWlsLmNvbSIsInN0YXR1cyI6IkFDVElWRSIsInN1YiI6InRlbGVncmFtLnZ6bG9tQGdtYWlsLmNvbSIsImlhdCI6MTc0NTE1MTg1NiwiZXhwIjoxNzQ1MjM4MjU2fQ.Jk1Gj-JX5MMOb0qMT33Wbmnuyrdbyua5i25GRkHuN7s
+
+{
+  "title": "RTTM",
+  "description": "Raqamli Talim Texnalogialar Mazrkazi",
+  "phoneNumber": "+998902597890",
+  "headOfDepartment": "Ali aliyev",
+  "type": "TECHNICAL",
+  "address": "Andijon shaxar"
+}
+
+### Barcha bo'limlarni olish
+GET https://rttm.astiedu.uz/api/department/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1VQRVJBRE1JTiIsInZpc2libGUiOnRydWUsInN1cm5hbWUiOiJZdWxkYXNoZXYiLCJuYW1lIjoiQXZhemJlayIsImlkIjoxLCJwb3NpdGlvbiI6IldlYi1kaXpheW5lciIsImVtYWlsIjoiYXZhemJlay55dWxkYXNoZXZAZXhhbXBsZS5jb20iLCJzdGF0dXMiOiJBQ1RJVkUiLCJzdWIiOiJhdmF6YmVrLnl1bGRhc2hldkBleGFtcGxlLmNvbSIsImlhdCI6MTc0MDMxMDMzNiwiZXhwIjoxNzQwMzk2NzM2fQ.sffPbOqkyoVoDCwwk-p__cnxrnEKEhSSLErqKhf5FBo
+
+### ID bo'yicha bo'lim olish
+GET http://localhost:8080/department/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzkwMDQ3MjgsImV4cCI6MTczOTA5MTEyOH0.V-NL0olQN6hNuBqOMu-p8-ym0UdCx4X3Cq1g7zlu1AM
+
+### Bo'limni yangilash
+PUT http://localhost:8080/department/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzkwMDQ3MjgsImV4cCI6MTczOTA5MTEyOH0.V-NL0olQN6hNuBqOMu-p8-ym0UdCx4X3Cq1g7zlu1AM
+
+{
+  "title": "Updated IT Department",
+  "description": "Updated description"
+}
+
+### Bo'lim statusini yangilash
+PUT http://localhost:8080/department/1/status
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzg5MjgxMTEsImV4cCI6MTczOTAxNDUxMX0.0U2752vhmXOpCdy0iDd0Mrn95hoZj4uBro2EFIBRuro
+
+{
+  "status": "CLOSED"
+}
+
+### Bo'limni o'chirish (mantiqiy)
+PATCH http://localhost:8080/department/1/wipe
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzkwMDQ3MjgsImV4cCI6MTczOTA5MTEyOH0.V-NL0olQN6hNuBqOMu-p8-ym0UdCx4X3Cq1g7zlu1AM
+
+{
+  "visible": true
+}
+
+### Bo'limni o'chirish (jismoniy)
+DELETE http://localhost:8080/department/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzkwMDQ3MjgsImV4cCI6MTczOTA5MTEyOH0.V-NL0olQN6hNuBqOMu-p8-ym0UdCx4X3Cq1g7zlu1AM
+
+### Paginatsiya bilan bo'limlarni olish
+GET http://localhost:8080/department/paged?page=1&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzkwMDQ3MjgsImV4cCI6MTczOTA5MTEyOH0.V-NL0olQN6hNuBqOMu-p8-ym0UdCx4X3Cq1g7zlu1AM
+
+### Filtr bo'yicha bo'limlarni olish
+POST http://localhost:8080/department/filter?page=1&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ2aXNpYmxlIjp0cnVlLCJzdXJuYW1lIjoiRG9lIiwibmFtZSI6IkpvaG4iLCJpZCI6MSwicG9zaXRpb24iOiJTb2Z0d2FyZSBEZXZlbG9wZXIiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3RhdHVzIjoiQUNUSVZFIiwic3ViIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzkwMDQ3MjgsImV4cCI6MTczOTA5MTEyOH0.V-NL0olQN6hNuBqOMu-p8-ym0UdCx4X3Cq1g7zlu1AM
+Content-Type: application/json
+
+{
+}
