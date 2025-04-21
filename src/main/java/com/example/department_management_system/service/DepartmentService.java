@@ -58,6 +58,7 @@ public class DepartmentService {
 
     /// Get All
     public List<DepartmentMapper> getAll() {
+        checkAccesss.checkAdminAccess();
         return departmentRepository.findAllMapper();
     }
 
@@ -143,8 +144,4 @@ public class DepartmentService {
         }
         return department.get();
     }
-
-
-
-
 }

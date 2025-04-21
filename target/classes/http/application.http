@@ -6,8 +6,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1VQRVJBRE1JTiIsInN1cm5hb
 {
   "title": "asdasd",
   "description": "xfesfesfe",
-  "departmentId": 1,
-  "offeringId": 1
+  "offeringId": 1,
+  "departmentId": 1
 }
 
 ### Get All Applications

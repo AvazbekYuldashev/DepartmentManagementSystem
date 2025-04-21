@@ -11,7 +11,6 @@ import com.example.department_management_system.dto.auth.ResponseDTO;
 import com.example.department_management_system.dto.employee.EmployeeRequestDTO;
 import com.example.department_management_system.enums.AppLangulage;
 import com.example.department_management_system.service.AuthService;
-import com.example.department_management_system.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,22 +25,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     private AuthService authService;
-    @Autowired
-    private ProfileService profileService;
-
-//    @PostMapping("/registration")
-//    public ResponseEntity<EmployeeDTO> create(@RequestBody EmployeeDTO profileDTO) {
-//        EmployeeDTO result = profileService.registration(profileDTO);
-//        return ResponseEntity.ok().body(result);
-//    }
-
-//    @PostMapping("/authorization")
-//    public ResponseEntity<ResponseDTO> authorization(@RequestBody AuthDTO authDTO) {
-//        ResponseDTO result = profileService.authorization(authDTO);
-//        return ResponseEntity.ok().body(result);
-//    }
-
-
 
 
     @Operation(summary = "Create User", description = "Api used for creating new User")

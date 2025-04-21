@@ -39,6 +39,7 @@ public class ApplicationService {
 
     ///  Create application  --> (Yangi ariza yaratish).
     public ApplicationDTO saveApplication(ApplicationDTO applicationDTO) {
+        checkAccesss.checkAdminAccess();
         applicationDTO.setCreatedById(SpringSecurityUtil.getCurrentUserId());
         applicationDTO.setCreatedDate(LocalDateTime.now());
         applicationDTO.setUpdatedDate(LocalDateTime.now());
@@ -61,6 +62,7 @@ public class ApplicationService {
     }
     /// Get By CreatedBy --> (Arizani yuborgan xodim bo‘yicha qidirish).
     public List<ApplicationMapper> findByCreatedBy() {
+        checkAccesss.checkAdminAccess();
         return applicationRepository.findByCreatedByMapper(SpringSecurityUtil.getCurrentUserId());
     }
     /// Get By AssingedTo --> (Arizani bajargan xodim bo‘yicha qidirish).
@@ -70,6 +72,7 @@ public class ApplicationService {
     }
     /// Get By Department -->  (Ariza yuborilgan bo‘lim bo‘yicha qidirish).
     public List<ApplicationMapper> findByDepartmentId(Integer id) {
+        checkAccesss.checkAdminAccess();
         Integer currentDepartmentId = SpringSecurityUtil.getCurrentDepartmentId();
         if (currentDepartmentId != null && currentDepartmentId.equals(id)) {checkAccesss.checkAdminAccess();}
         return applicationRepository.findByDepartmentMapper(id);
@@ -82,6 +85,7 @@ public class ApplicationService {
     }
     /// Update Visible --> (Ko‘rinish holatini (visible) yangilash.)
     public Boolean updateVisible(Integer id, Boolean visible) {
+        checkAccesss.checkAdminAccess();
         ApplicationEntity application = getByIdEntity(id);
         if (application.getCreatedBy().getId().equals(SpringSecurityUtil.getCurrentUserId())){
             ApplicationEntity entity = getByIdEntity(id);
@@ -114,6 +118,7 @@ public class ApplicationService {
     }
     ///  Get Paged Created By  --> (Yaratgan odamni arizalarini paged korish)
     public PageImpl<ApplicationMapper> getCreatedByPaged(int page, int size){
+        checkAccesss.checkAdminAccess();
         Integer id = SpringSecurityUtil.getCurrentUserId();
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -132,40 +137,37 @@ public class ApplicationService {
 
     /// Update --> (Holatni yangilash).
     public boolean updateStatus(Integer id, ApplicationDTO applicationDTO) {
+        checkAccesss.checkAdminAccess();
         ApplicationEntity application = getByIdEntity(id);
         EmployeeRole userRole = EmployeeRole.valueOf(SpringSecurityUtil.getCurrentEmployeeRole());
-
         if (applicationDTO.getStatus() == null) {
             throw new AppBadRequestExeption("Please indicate the status of the application.");
         }
-
         // Statusni ENUM formatiga o'tkazish
         ApplicationStatus status = applicationDTO.getStatus();
         checkAccesss.chekStatus(status); // Statusni tekshirish
-
         // Ruxsatni tekshirish
         if (!checkAccesss.hasPermissionToUpdate(userRole, status)) {
             throw new AppBadRequestExeption("You do not have permission to change the status to " + status);
         }
-
         // Statusni yangilash
         boolean isUpdated = applyStatusUpdate(id, status);
-
         // Agar status COMPLETED bo‘lsa, qo‘shimcha saqlash
         if (isUpdated && status == ApplicationStatus.COMPLETED) {
             completedWorkService.saveCompletedWork(application.getId());
         }
-        
         return isUpdated;
     }
 
     /// Update status --> (Status-ni yangilash metodini soddalashtirish)
     private boolean applyStatusUpdate(Integer id, ApplicationStatus status) {
+        checkAccesss.checkAdminAccess();
         return applicationRepository.updateStatus(id, status, LocalDateTime.now()) > 0;
     }
 
     /// Get by id ApplicationEntity (Application  ni ID bo‘yicha olish)
     public ApplicationEntity getByIdEntity(Integer id) {
+        checkAccesss.checkAdminAccess();
         return applicationRepository.findById(id)
                 .orElseThrow(() -> new AppBadRequestExeption("Application does not exist."));
     }

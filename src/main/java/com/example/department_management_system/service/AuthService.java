@@ -69,14 +69,16 @@ public class AuthService {
                 // ACTIVE
                 employeeRepository.changeStatus(profile.getId(), GeneralStatus.ACTIVE);
                 return boundleService.getMessage("successfully.registered", lang);
+
             }
         } catch (JwtException e) {
+
         }
-        throw new AppBadExeption(boundleService.getMessage("verification.failed", lang));    //TODO
+        throw new AppBadExeption(boundleService.getMessage("verification.failed", lang));
     }
 
     public AuthResponseDTO login(EmployeeRequestDTO dto, AppLangulage lang) {
-        Optional<EmployeeEntity> optional = employeeRepository.findByEmailAndVisibleTrue(dto.getEmail());
+        Optional<EmployeeEntity> optional = profileService.findByEmailAndVisibleTrue(dto.getEmail());
         if (optional.isEmpty()) {
             throw new NotFoundExeption(boundleService.getMessage("username.not.found", lang));
         }

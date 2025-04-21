@@ -35,6 +35,7 @@ public class OfferingService {
     private CheckAccesss checkAccesss;
     @Autowired
     private OfferingMapperDE offeringMapper;
+
     /// Create
     public OfferingDTO create(OfferingDTO offeringDTO) {
         checkAccesss.checkAdminAccess();
@@ -44,34 +45,32 @@ public class OfferingService {
         offeringDTO.setStatus(true);
         return offeringMapper.toDTO(offeringRepository.save(offeringMapper.toEntity(offeringDTO)));
     }
-
     /// Get All
     public List<OfferingMapper> getAll() {
+        checkAccesss.checkAdminAccess();
         return offeringRepository.findAllMapper();
     }
-
     ///  Get By Id
     public OfferingMapper getById(Integer id) {
+        checkAccesss.checkAdminAccess();
         return offeringRepository.findByIdMapper(id).get();
     }
-
     ///  Get By Department
     public List<OfferingMapper> getByDepartmentId(Integer departmentId) {
+        checkAccesss.checkAdminAccess();
         return offeringRepository.findByDepartmentMapper(departmentId);
     }
-
+    ///  Update status
     public Boolean updateStatus(Integer id, OfferingDTO offeringDTO) {
         checkAccesss.checkAdminAccess();
         int effectedRow = offeringRepository.updateStatus(id, offeringDTO.getStatus(), LocalDateTime.now());
         return effectedRow > 0;
     }
-
+    ///  UpdateDepartmentId
     public Boolean updateDepartmentIdP(Integer id, OfferingDTO offeringDTO) {
         checkAccesss.checkAdminAccess();
         Optional<DepartmentEntity> department = departmentRepository.findByIdCustom(offeringDTO.getDepartmentId());
-        if (department.isEmpty()){
-            throw new AppBadRequestExeption("Department id not found");
-        }
+        if (department.isEmpty()){throw new AppBadRequestExeption("Department id not found");}
         int effectedRow = offeringRepository.updateDepartmentIdP(id, offeringDTO.getDepartmentId(), LocalDateTime.now());
         return effectedRow > 0;
     }
@@ -96,6 +95,7 @@ public class OfferingService {
         return true;
     }
 
+
     public PageImpl<OfferingMapper> pagination(int page, int size){
         checkAccesss.checkAdminAccess();
         Sort sort = Sort.by("createdDate").descending();
@@ -106,6 +106,7 @@ public class OfferingService {
     }
 
     public PageImpl<OfferingMapper> paginationByDepartmentId(int page, int size, Integer departmentId) {
+        checkAccesss.checkAdminAccess();
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<OfferingMapper> pageObj = offeringRepository.findAllByDepartmentIdPageble(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()), departmentId);
@@ -114,20 +115,11 @@ public class OfferingService {
     }
 
     public PageImpl<OfferingDTO> filter(OfferingFilterDTO dto, int page, int size) {
+        checkAccesss.checkAdminAccess();
         PageImpl<OfferingEntity> result = offeringCustomRepository.filter(dto, page, size);
         List<OfferingDTO> dtoResult = new LinkedList<>();
         for (OfferingEntity entity : result){dtoResult.add(offeringMapper.toDTO(entity));}
         return new PageImpl<>(dtoResult, PageRequest.of(page, size), result.getTotalElements());
     }
-
-
-    /// Get By Id
-    public OfferingEntity getByIdEntity(Integer id) {
-        Optional<OfferingEntity> offeringEntity = offeringRepository.findById(id);
-        if (offeringEntity.isEmpty()){return null;}
-        return offeringEntity.get();
-    }
-
-
 
 }

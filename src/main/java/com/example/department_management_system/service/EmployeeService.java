@@ -32,9 +32,6 @@ public class EmployeeService {
     @Lazy
     private EmployeeRepository employeeRepository;
     @Autowired
-    @Lazy
-    private DepartmentService departmentService;
-    @Autowired
     private EmployeeCustomRepository employeeCustomRepository;
     @Autowired
     private BCryptPasswordEncoder bc;
