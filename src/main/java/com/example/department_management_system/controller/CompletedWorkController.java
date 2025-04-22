@@ -62,7 +62,7 @@ public class CompletedWorkController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")
     @PatchMapping("/{id}/wipe")
     public ResponseEntity<?> deleteWipe(@PathVariable("id") Integer id, @RequestBody CompletedWorkDTO completedWorkDTO) {
-        Boolean isUpdate = completedWorkService.deleteWipe(id, completedWorkDTO.getVisible());
+        Boolean isUpdate = completedWorkService.updateVisibility(id, completedWorkDTO.getVisible());
         return new ResponseEntity<>(isUpdate, HttpStatus.OK);
     }
     ///  Pagination

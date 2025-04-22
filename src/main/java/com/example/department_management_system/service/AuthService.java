@@ -10,6 +10,7 @@ import com.example.department_management_system.enums.EmployeeRole;
 import com.example.department_management_system.enums.GeneralStatus;
 import com.example.department_management_system.exp.AppBadExeption;
 import com.example.department_management_system.exp.NotFoundExeption;
+import com.example.department_management_system.mapper.employee.EmployeeMapper;
 import com.example.department_management_system.repository.employee.EmployeeRepository;
 import com.example.department_management_system.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
@@ -29,16 +30,16 @@ public class AuthService {
     @Autowired
     private EmailSendingService emailSendingService;
     @Autowired
-    private ProfileService profileService;
-    @Autowired
     private ResourceBoundleService boundleService;
+    @Autowired
+    private EmployeeService employeeService;
 
 
     public AppResponse<String> registration(RegistrationDTO dto, AppLangulage lang) {
         Optional<EmployeeEntity> optional = employeeRepository.findByEmailAndVisibleTrue(dto.getEmail());
         if (optional.isPresent()) {
             if (optional.get().getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
-                profileService.deleteById(optional.get().getId());
+                employeeService.deleteById(optional.get().getId());
                 // send sms/email TODO
             } else {
                 throw new AppBadExeption(boundleService.getMessage("email.phone.exists", lang));
@@ -64,21 +65,19 @@ public class AuthService {
     public String regVerification(String token, AppLangulage lang) {
         try {
             Integer id = JwtUtil.decodeRegVerToken(token);
-            EmployeeEntity profile = profileService.getById(id, lang);
+            EmployeeMapper profile = employeeService.getById(id);
             if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
                 // ACTIVE
                 employeeRepository.changeStatus(profile.getId(), GeneralStatus.ACTIVE);
                 return boundleService.getMessage("successfully.registered", lang);
-
             }
         } catch (JwtException e) {
-
         }
-        throw new AppBadExeption(boundleService.getMessage("verification.failed", lang));
+        throw new AppBadExeption(boundleService.getMessage("verification.failed", lang));    //TODO
     }
 
     public AuthResponseDTO login(EmployeeRequestDTO dto, AppLangulage lang) {
-        Optional<EmployeeEntity> optional = profileService.findByEmailAndVisibleTrue(dto.getEmail());
+        Optional<EmployeeEntity> optional = employeeRepository.findByEmailAndVisibleTrue(dto.getEmail());
         if (optional.isEmpty()) {
             throw new NotFoundExeption(boundleService.getMessage("username.not.found", lang));
         }

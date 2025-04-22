@@ -17,6 +17,4 @@ public interface ApplicationMapper {
     Integer getAssignedTo();             /// Arizani ko'rib chiqadigan xodim ID
     Integer getDepartment();             /// Ariza yuborilayotgan bo'lim ID
     ApplicationStatus getStatus();       /// Ariza xolati
-
-
 }

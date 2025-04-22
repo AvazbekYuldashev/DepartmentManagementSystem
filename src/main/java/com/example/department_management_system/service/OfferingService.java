@@ -5,7 +5,9 @@ import com.example.department_management_system.dto.offering.OfferingDTO;
 import com.example.department_management_system.dto.offering.OfferingFilterDTO;
 import com.example.department_management_system.entity.DepartmentEntity;
 import com.example.department_management_system.entity.OfferingEntity;
+import com.example.department_management_system.enums.AppLangulage;
 import com.example.department_management_system.exp.AppBadRequestExeption;
+import com.example.department_management_system.mapper.department.DepartmentMapper;
 import com.example.department_management_system.mapper.offering.OfferingMapper;
 import com.example.department_management_system.mapper.offering.OfferingMapperDE;
 import com.example.department_management_system.repository.department.DepartmentRepository;
@@ -30,11 +32,11 @@ public class OfferingService {
     @Autowired
     private OfferingCustomRepository offeringCustomRepository;
     @Autowired
-    private DepartmentRepository departmentRepository;
-    @Autowired
     private CheckAccesss checkAccesss;
     @Autowired
     private OfferingMapperDE offeringMapper;
+    @Autowired
+    private DepartmentService departmentService;
 
     /// Create
     public OfferingDTO create(OfferingDTO offeringDTO) {
@@ -45,32 +47,31 @@ public class OfferingService {
         offeringDTO.setStatus(true);
         return offeringMapper.toDTO(offeringRepository.save(offeringMapper.toEntity(offeringDTO)));
     }
+
     /// Get All
     public List<OfferingMapper> getAll() {
-        checkAccesss.checkAdminAccess();
         return offeringRepository.findAllMapper();
     }
+
     ///  Get By Id
     public OfferingMapper getById(Integer id) {
-        checkAccesss.checkAdminAccess();
         return offeringRepository.findByIdMapper(id).get();
     }
+
     ///  Get By Department
     public List<OfferingMapper> getByDepartmentId(Integer departmentId) {
-        checkAccesss.checkAdminAccess();
         return offeringRepository.findByDepartmentMapper(departmentId);
     }
-    ///  Update status
+
     public Boolean updateStatus(Integer id, OfferingDTO offeringDTO) {
         checkAccesss.checkAdminAccess();
         int effectedRow = offeringRepository.updateStatus(id, offeringDTO.getStatus(), LocalDateTime.now());
         return effectedRow > 0;
     }
-    ///  UpdateDepartmentId
-    public Boolean updateDepartmentIdP(Integer id, OfferingDTO offeringDTO) {
+
+    public Boolean updateDepartmentIdP(Integer id, OfferingDTO offeringDTO, AppLangulage lang) {
         checkAccesss.checkAdminAccess();
-        Optional<DepartmentEntity> department = departmentRepository.findByIdCustom(offeringDTO.getDepartmentId());
-        if (department.isEmpty()){throw new AppBadRequestExeption("Department id not found");}
+        departmentService.getById(offeringDTO.getDepartmentId(), lang);
         int effectedRow = offeringRepository.updateDepartmentIdP(id, offeringDTO.getDepartmentId(), LocalDateTime.now());
         return effectedRow > 0;
     }
@@ -95,31 +96,30 @@ public class OfferingService {
         return true;
     }
 
-
     public PageImpl<OfferingMapper> pagination(int page, int size){
         checkAccesss.checkAdminAccess();
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<OfferingMapper> pageObj = offeringRepository.findAllPageble(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
         long total = pageObj.getTotalElements();
-        return new PageImpl<OfferingMapper>(pageObj.getContent(), pageable, total);
+        return new PageImpl<>(pageObj.getContent(), pageable, total);
     }
 
     public PageImpl<OfferingMapper> paginationByDepartmentId(int page, int size, Integer departmentId) {
-        checkAccesss.checkAdminAccess();
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<OfferingMapper> pageObj = offeringRepository.findAllByDepartmentIdPageble(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()), departmentId);
         long total = pageObj.getTotalElements();
-        return new PageImpl<OfferingMapper>(pageObj.getContent(), pageable, total);
+        return new PageImpl<>(pageObj.getContent(), pageable, total);
     }
 
     public PageImpl<OfferingDTO> filter(OfferingFilterDTO dto, int page, int size) {
-        checkAccesss.checkAdminAccess();
         PageImpl<OfferingEntity> result = offeringCustomRepository.filter(dto, page, size);
         List<OfferingDTO> dtoResult = new LinkedList<>();
         for (OfferingEntity entity : result){dtoResult.add(offeringMapper.toDTO(entity));}
         return new PageImpl<>(dtoResult, PageRequest.of(page, size), result.getTotalElements());
     }
+
+
 
 }

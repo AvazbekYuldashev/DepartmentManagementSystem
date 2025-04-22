@@ -3,6 +3,7 @@ package com.example.department_management_system.controller;
 
 import com.example.department_management_system.dto.offering.OfferingDTO;
 import com.example.department_management_system.dto.offering.OfferingFilterDTO;
+import com.example.department_management_system.enums.AppLangulage;
 import com.example.department_management_system.mapper.offering.OfferingMapper;
 import com.example.department_management_system.service.OfferingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,8 @@ public class OfferingController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")
     @PutMapping("/{id}/department")
-    public ResponseEntity<?> updateDepartmentIdP(@PathVariable("id") Integer id, @RequestBody OfferingDTO offeringDTO) {
-        Boolean offering = offeringService.updateDepartmentIdP(id, offeringDTO);
+    public ResponseEntity<?> updateDepartmentIdP(@PathVariable("id") Integer id, @RequestBody OfferingDTO offeringDTO, AppLangulage lang) { // todo lang
+        Boolean offering = offeringService.updateDepartmentIdP(id, offeringDTO, lang);
         return new ResponseEntity<>(offering, HttpStatus.OK);
     }
 

@@ -9,5 +9,4 @@ public interface CompletedWorkMapper {
     Integer getApplicationId();          /// Bajarilgan ishga tegishli ariza ID
     Integer getDepartmentId();           /// Bajarilgan ishga tegishli bo'lim ID
     Integer getEmployeeId();             /// Xizmat ko'rsatgan xodim ID
-
 }

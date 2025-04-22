@@ -5,6 +5,7 @@ import com.example.department_management_system.dto.employee.EmployeeFilterDTO;
 import com.example.department_management_system.dto.employee.EmployeeUpdateDTO;
 import com.example.department_management_system.entity.DepartmentEntity;
 import com.example.department_management_system.entity.EmployeeEntity;
+import com.example.department_management_system.enums.AppLangulage;
 import com.example.department_management_system.enums.EmployeeRole;
 import com.example.department_management_system.exp.AppBadRequestExeption;
 import com.example.department_management_system.mapper.employee.EmployeeMapper;
@@ -41,6 +42,8 @@ public class EmployeeService {
     private CheckAccesss checkAccesss;
     @Autowired
     private EmployeeMapperDE employeeMapper;
+    @Autowired
+    private ResourceBoundleService boundleService;
 
     public EmployeeEntity getByIdEntity(Integer id) {
         return employeeRepository.findById(id)
@@ -96,11 +99,11 @@ public class EmployeeService {
         return effectedRow > 0;
     }
     @Transactional
-    public Boolean updateStatus(Integer id, EmployeeDTO employeeDTO) {
+    public Boolean updateStatus(Integer id, EmployeeDTO employeeDTO, AppLangulage lang) {
         checkAccesss.checkSuperAdminAccess();
         EmployeeEntity employee = getByIdEntity(id);
         if (employee == null) {
-            throw new AppBadRequestExeption("Employee ID not found: " + id);
+            throw new AppBadRequestExeption(boundleService.getMessage("employee.id.not.found", lang) + id);
         }
         int effectedRow = employeeRepository.updateStatus(id, employeeDTO.getStatus(), LocalDateTime.now());
         return effectedRow > 0;
@@ -121,10 +124,11 @@ public class EmployeeService {
     }
     ///  Update
     @Transactional
-    public Boolean updateEmployee(Integer id, EmployeeUpdateDTO employeeUpdateDTO) {
+    public Boolean updateEmployee(Integer id, EmployeeUpdateDTO employeeUpdateDTO, AppLangulage lang) {
         isValid(employeeUpdateDTO);
         EmployeeEntity employee = getByIdEntity(id);
-        if (employee == null) {throw new AppBadRequestExeption("Employee ID not found: " + id);}
+        if (employee == null) {throw new AppBadRequestExeption(boundleService.getMessage("employee.id.not.found", lang) + id);
+        }
         if (id.equals(1)){throw new AppBadRequestExeption("Employee ID is unique ADMIN");}
         if (employeeUpdateDTO.getEmail() != null){emailValid(employeeUpdateDTO.getEmail(), id);}
         if (employeeUpdateDTO.getPassword() != null && !employeeUpdateDTO.getPassword().isEmpty()) {
@@ -215,6 +219,7 @@ public class EmployeeService {
     }
 
 
-
-
+    public void deleteById(Integer id) {
+        employeeRepository.deleteById(id);
+    }
 }

@@ -6,6 +6,7 @@ import com.example.department_management_system.dto.department.DepartmentDTO;
 import com.example.department_management_system.dto.department.DepartmentFilterDTO;
 import com.example.department_management_system.dto.department.DepartmentUpdateDTO;
 import com.example.department_management_system.entity.DepartmentEntity;
+import com.example.department_management_system.enums.AppLangulage;
 import com.example.department_management_system.enums.DepartmentStatus;
 import com.example.department_management_system.exp.AppBadRequestExeption;
 import com.example.department_management_system.mapper.department.DepartmentMapper;
@@ -37,6 +38,9 @@ public class DepartmentService {
     private CheckAccesss checkAccesss;
     @Autowired
     private DepartmentMapperDE departmentMapper;
+    @Autowired
+    private ResourceBoundleService boundleService;
+
     ///  Create Department
     @Transactional
     public DepartmentDTO createDepartment(DepartmentCreateDTO request) {
@@ -55,22 +59,15 @@ public class DepartmentService {
         DepartmentEntity e = departmentMapper.toEntity(dto);
         return departmentMapper.toDto(departmentRepository.save(e));
     }
-
     /// Get All
     public List<DepartmentMapper> getAll() {
-        checkAccesss.checkAdminAccess();
         return departmentRepository.findAllMapper();
     }
-
     /// Get By Id
-    public DepartmentMapper getById(Integer id) {
-        if (SpringSecurityUtil.getCurrentDepartmentId() != id) {
-            checkAccesss.checkSuperAdminAccess();
-        }
+    public DepartmentMapper getById(Integer id, AppLangulage lang) {
         return departmentRepository.getByIdMapper(id)
-                .orElseThrow(() -> new AppBadRequestExeption("Department not found with id: " + id));
+                .orElseThrow(() -> new AppBadRequestExeption(boundleService.getMessage("department.not.found.with.id", lang) + id));
     }
-
     /// Update status
     @Transactional
     public Boolean updateStatus(Integer id, DepartmentUpdateDTO dto) {
@@ -79,11 +76,10 @@ public class DepartmentService {
         }
         return departmentRepository.updateStatus(id, dto.getStatus(), LocalDateTime.now()) > 0;
     }
-
     /// Update
     @Transactional
     public Boolean update(Integer id, DepartmentUpdateDTO dto) {
-        if (SpringSecurityUtil.getCurrentDepartmentId() != id) {
+        if (!SpringSecurityUtil.getCurrentDepartmentId().equals(id)) {
             checkAccesss.checkSuperAdminAccess();
         }
         int effectedRow = departmentRepository.updateDepartment(id,
@@ -93,27 +89,26 @@ public class DepartmentService {
                 dto.getType(), LocalDateTime.now());
         return effectedRow > 0;
     }
-
     /// Delete by id for visible
     @Transactional
-    public Boolean deleteWipe(Integer id, Boolean visible) {
+    public Boolean deleteWipe(Integer id, Boolean visible, AppLangulage lang) {
         if (SpringSecurityUtil.getCurrentDepartmentId() != id) {
             checkAccesss.checkSuperAdminAccess();
         }
-        DepartmentEntity entity = getByIdEntity(id);
+        DepartmentEntity entity = getByIdEntity(id, lang);
         if (entity == null) {
-            throw new AppBadRequestExeption("Department not found with id: " + id);
+            throw new AppBadRequestExeption(boundleService.getMessage("department.not.found.with.id", lang) + id);
         }
         int effectedRow = departmentRepository.updateVisible(id, visible, LocalDateTime.now());
         return effectedRow > 0;
     }
     /// Delete by id
     @Transactional
-    public Boolean deleteById(Integer id) {
+    public Boolean deleteById(Integer id, AppLangulage lang) {
         checkAccesss.checkSuperAdminAccess();
-        DepartmentEntity entity = getByIdEntity(id);
+        DepartmentEntity entity = getByIdEntity(id, lang);
         if (entity == null) {
-            throw new AppBadRequestExeption("Department not found with id: " + id);
+            throw new AppBadRequestExeption(boundleService.getMessage("department.not.found.with.id", lang) + id);
         }
         departmentRepository.deleteById(id);
         return true;
@@ -125,7 +120,7 @@ public class DepartmentService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<DepartmentMapper> pageObj = departmentRepository.findAllPageble(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
         long total = pageObj.getTotalElements();
-        return new PageImpl<DepartmentMapper>(pageObj.getContent(), pageable, total);
+        return new PageImpl<>(pageObj.getContent(), pageable, total);
     }
     ///  Filter by dto for pagination
     public PageImpl<DepartmentDTO> filter(DepartmentFilterDTO dto, int page, int size) {
@@ -135,13 +130,19 @@ public class DepartmentService {
         for (DepartmentEntity entity : result){dtoResult.add(departmentMapper.toDto(entity));}
         return new PageImpl<>(dtoResult, PageRequest.of(page, size), result.getTotalElements());
     }
-
     /// Get By id returned entity
-    public DepartmentEntity getByIdEntity(Integer id) {
+    public DepartmentEntity getByIdEntity(Integer id, AppLangulage lang) {
         Optional<DepartmentEntity> department = departmentRepository.findByIdCustom(id);
         if (department.isEmpty()){
-            throw new AppBadRequestExeption("Department not found with id: " + id);
+            throw new AppBadRequestExeption(boundleService.getMessage("department.not.found.with.id", lang) + id);
         }
         return department.get();
     }
+
+
+
+    // TODO shuyerga yetd
+
+
+
 }

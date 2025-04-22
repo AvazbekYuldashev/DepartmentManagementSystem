@@ -1,14 +1,11 @@
 package com.example.department_management_system.mapper.employee;
 
-
-
 import com.example.department_management_system.enums.EmployeeRole;
 import com.example.department_management_system.enums.EmployeeStatus;
 
 import java.time.LocalDateTime;
 
 public interface EmployeeMapper {
-
     Integer getId();                                                    /// Id si
     String getName();                                                   /// Ismi
     String getSurname();                                                /// Familyasi
